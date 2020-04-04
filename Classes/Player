@@ -1,0 +1,15 @@
+
+class Player:
+    def __init__(self, map, speed_vector, hp, damage = 0, bullet = default):
+        self.map = map
+        self.speed_vector = speed_vector
+        self.damage = damage
+        self.hp = hp
+        self.bullet = __init__(bullet)
+
+    def shoot(self):
+        return self.bullet
+
+
+    def take_damage(self, damage):
+        self.damage -= damage
