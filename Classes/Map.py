@@ -12,7 +12,7 @@ class Map:
         self.barrier_top_y = barrier_top_y
         self.player_range_bottom_y = player_range_bottom_y
         self.player_range_top_y = barrier_botom_y - 1
-        self.obstacles = self.generateObstacle()
+        self.obstacles = []
         self.obstacles_speed = obstacles_speed
         self.obstacle_spawn_likelihood = obstacle_spawn_likelihood
 
@@ -52,5 +52,9 @@ class Map:
     def startObstacleCourse(self):
         while(1):
             if(randbelow(self.obstacle_spawn_likelihood) == 0):
-                self.generateObstacle()
+                self.obstacles.append(self.generateObstacle())
+            for o in self.obstacles:
+                if o.getx == -1:
+                    self.obstacles.remove(o)
+
 
