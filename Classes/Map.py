@@ -42,7 +42,7 @@ class Map:
         return Obstacle(Position(randbelow(self.player_range_top_y - self.player_range_bottom_y) + self.player_range_bottom_y, self.x),self.obstacles_speed, self)
 
     def deleteObstacle(self, obstacle: Obstacle):
-        self.obstacles = self.generateObstacle
+        self.obstacles = self.generateObstacle()
 
     def speedUpObstacles(self, newSpeed = -1, speedDifference = 0):
         if newSpeed != -1:
