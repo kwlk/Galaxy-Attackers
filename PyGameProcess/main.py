@@ -1,6 +1,7 @@
 import pygame
 
 from Classes.Position import Position
+from Classes.Player import Player
 
 pygame.init()
 
@@ -10,8 +11,8 @@ pygame.display.set_caption("Galaxy Attackers", "Galaxy Attackers")
 pygame.display.set_icon(pygame.image.load("school.png"))
 player_icon = pygame.image.load("tank.png")
 player_position = Position(168, 168)
-player_position_change_x = 0
-player_position_change_y = 0
+player_speed = Position(0, 0)
+player = Player(map=None, speed_vector=Position(0, 0), max_hp=3, damage=0, position=player_position)
 
 game_on = True
 while game_on:
@@ -21,19 +22,18 @@ while game_on:
             game_on = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                player_position_change_x = -0.1
+                player.speed_vector.setx(-0.1)
             if event.key == pygame.K_RIGHT:
-                player_position_change_x = 0.1
+                player.speed_vector.setx(0.1)
             if event.key == pygame.K_DOWN:
-                player_position_change_y = 0.1
+                player.speed_vector.sety(0.1)
             if event.key == pygame.K_UP:
-                player_position_change_y = -0.1
+                player.speed_vector.sety(-0.1)
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                player_position_change_x = 0
+                player.speed_vector.setx(0)
             if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
-                player_position_change_y = 0
-    player_position.move_x(player_position_change_x)
-    player_position.move_y(player_position_change_y)
+                player.speed_vector.sety(0.1)
+    player.move()
     screen.blit(player_icon, (player_position.getx(), player_position.gety()))
     pygame.display.update()
