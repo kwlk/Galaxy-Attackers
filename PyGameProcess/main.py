@@ -2,6 +2,7 @@ import pygame
 
 from Classes.Position import Position
 from Classes.Player import Player
+from Classes.Map import Map
 
 pygame.init()
 
@@ -12,7 +13,7 @@ pygame.display.set_icon(pygame.image.load("school.png"))
 player_icon = pygame.image.load("tank.png")
 player_position = Position(168, 168)
 player_speed = Position(0, 0)
-player = Player(map=None, speed_vector=Position(0, 0), max_hp=3, damage=0, position=player_position)
+player = Player(speed_vector=Position(0, 0), max_hp=3, damage=0, position=player_position)
 
 game_on = True
 while game_on:
@@ -33,7 +34,7 @@ while game_on:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 player.speed_vector.setx(0)
             if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
-                player.speed_vector.sety(0.1)
+                player.speed_vector.sety(0)
     player.move()
-    screen.blit(player_icon, (player_position.getx(), player_position.gety()))
+    screen.blit(player_icon, (player.position.x, player.position.y))
     pygame.display.update()
