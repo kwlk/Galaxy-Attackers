@@ -12,11 +12,15 @@ class Position:
     def gety(self):
         return self.y
 
-    def move_x(self, x):
-        self.x += x
+    def setx(self, x):
+        self.x = x
 
-    def move_y(self, y):
-        self.y += y
+    def sety(self, y):
+        self.y = y
+
+    def move(self, position):
+        self.x += position.x
+        self.y += position.y
 
     def distance(self, other_position):
         return sqrt((self.x-other_position.x)**2+(self.y-other_position.y)**2)
