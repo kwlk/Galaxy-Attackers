@@ -13,8 +13,10 @@ class Player:
     def shoot(self):
         return self.bullet_type
 
-    def move(self):
-        self.position = Position(self.position.x + self.speed_vector.x, self.position.y + self.speed_vector.y)
+    def move(self, top_left: Position, bottom_right: Position):
+        new_position = Position(self.position.x + self.speed_vector.x, self.position.y + self.speed_vector.y)
+        if bottom_right.x > new_position.x > top_left.x and bottom_right.y > new_position.y > top_left.y:
+            self.position = new_position
 
     def take_damage(self, damage):
         self.hp -= damage

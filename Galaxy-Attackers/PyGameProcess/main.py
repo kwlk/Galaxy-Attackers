@@ -35,6 +35,6 @@ while game_on:
                 player.speed_vector.setx(0)
             if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
                 player.speed_vector.sety(0)
-    player.move()
+    player.move(Position(0, 0), Position(400, 400))
     screen.blit(player_icon, (player.position.x, player.position.y))
     pygame.display.update()
