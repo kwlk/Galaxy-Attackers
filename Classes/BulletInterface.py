@@ -3,7 +3,6 @@ class BulletInterface:
         self.bullet_type = bullet_type
         BulletInterface.recogniseBulletType(self, bullet_type)
         pass
-        
 
     def recogniseBulletType(self, bullet_type):
         if bullet_type == 0:

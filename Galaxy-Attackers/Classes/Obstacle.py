@@ -1,17 +1,33 @@
 from .Position import Position
+from .Player import Player
+
 
 class Obstacle:
-    def __init__(self, position: Position, speed, end_of_map):
-        self.speed = speed
+    def __init__(self, position: Position, img):
         self.position = position
-        self.end_of_map = end_of_map
+        self.state = 0
+        self.damage = 1
+        self.image = img
+        self.rect = img.get_rect(center=(position.getx(), position.gety()))
 
-    def collision(self, player, damage):
-        player.take_damage(damage)
-        self.position = Position(-1, -1)
+    def get_state(self):
+        return self.state
 
-    def getPosition(self):
+    def get_position(self):
         return self.position
-    
-    def move(self, y_vector):
-        self.position.gety += y_vector
+
+    def move(self, x_vector):
+        self.position.setx(self.position.gety()-x_vector)
+        self.rect = self.rect.move(-x_vector, 0)
+
+    def get_dmg(self):
+        return self.damage
+
+    def change_dmg(self, new_damage):
+        self.damage = new_damage
+
+    def get_img(self):
+        return self.image
+
+    def get_rect(self):
+        return self.rect
