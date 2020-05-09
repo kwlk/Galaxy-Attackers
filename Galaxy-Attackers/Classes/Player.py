@@ -22,7 +22,7 @@ class Player:
 
     def move(self):
         self.position = Position(self.position.x + self.speed_vector.x, self.position.y + self.speed_vector.y)
-        self.rect.move(self.speed_vector.getx(), self.speed_vector.gety())
+        self.rect = self.rect.move(self.speed_vector.getx(), self.speed_vector.gety())
 
     def take_damage(self, damage):
         self.hp -= damage

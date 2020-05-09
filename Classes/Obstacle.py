@@ -8,6 +8,7 @@ class Obstacle:
         self.state = 0
         self.damage = 1
         self.image = img
+        self.rect = img.get_rect(center=(position.getx(), position.gety()))
 
     def get_state(self):
         return self.state
@@ -15,8 +16,9 @@ class Obstacle:
     def get_position(self):
         return self.position
 
-    def move(self, y_vector):
-        self.position.gety += y_vector
+    def move(self, x_vector):
+        self.position.setx(self.position.gety()-x_vector)
+        self.rect = self.rect.move(-x_vector, 0)
 
     def get_dmg(self):
         return self.damage
@@ -26,3 +28,6 @@ class Obstacle:
 
     def get_img(self):
         return self.image
+
+    def get_rect(self):
+        return self.rect

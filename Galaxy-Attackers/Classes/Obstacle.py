@@ -16,9 +16,9 @@ class Obstacle:
     def get_position(self):
         return self.position
 
-    def move(self, y_vector):
-        self.position.gety += y_vector
-        self.rect.move(0, y_vector)
+    def move(self, x_vector):
+        self.position.setx(self.position.gety()-x_vector)
+        self.rect = self.rect.move(-x_vector, 0)
 
     def get_dmg(self):
         return self.damage
