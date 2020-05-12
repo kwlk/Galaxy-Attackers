@@ -1,23 +1,24 @@
+import pygame
+
+
 class Mob:
-    def __init__(self, mob_cluster, hp, position, bullet_type, hit_box_size):
-        self.position = position
-        self.mob_cluster = mob_cluster
+    def __init__(self,  hp, bullet_type, img, rect: pygame.rect):
         self.hp = hp
         self.bullet_type = bullet_type
-        self.hit_box_size = hit_box_size
+        self.img = img
+        self.rect = rect
 
     def get_position(self):
         return self.position
 
-    def get_mob_cluster(self):
-        return self.mob_cluster
+    def is_dead(self):
+        return self.hp <= 0
 
-    def die(self):
-        self.mob_cluster.kill_mob(self)
+    def get_rect(self):
+        return self.rect
 
-    def check_for_collision(self, bullet):
-        distance = self.position.distance(bullet.position)
-        if distance < self.hit_box_size or distance < bullet.hit_box_size:
-            self.hp -= bullet.dmg
-            if self.hp < 1:
-                self.die()
+    def move(self, x_vector):
+        self.rect = self.rect.move(x_vector, 0)
+
+    def down(self, y_vector):
+        self.rect = self.rect.move(0, y_vector)
