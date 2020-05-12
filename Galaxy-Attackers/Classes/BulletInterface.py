@@ -2,7 +2,8 @@ class BulletInterface:
     def __init__(self, bullet_type):
         self.bullet_type = bullet_type
         BulletInterface.recogniseBulletType(self, bullet_type)
-        pass
+        self.speed = None
+        self.damage = None
 
     def recogniseBulletType(self, bullet_type):
         if bullet_type == 0:
