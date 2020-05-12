@@ -1,7 +1,7 @@
 from .Position import Position
 
 class Obstacle:
-    def __init__(self, position: Position,img):
+    def __init__(self, position: Position, img):
         self.state = 0
         self.damage = 1
         self.image = img

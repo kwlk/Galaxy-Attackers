@@ -3,6 +3,7 @@ import pygame
 
 from .Mob import Mob
 from .Obstacle import Obstacle
+from .PlayerBullet import PlayerBullet
 from .Position import Position
 from .Player import Player
 from .Barrier import Barrier
@@ -33,6 +34,8 @@ class Map:
         self.mobs_acceleration = mobs_acceleration
         self.mobs_go_right = True
         self.mobs_down_speed = mobs_down_speed
+        self.player_bullets = []
+        self.mob_bullets = []
         self.barriers = []
         for i in range(1, 4):
             barrier_pos = Position(self.get_barrier_rect().centerx * i/2, self.get_barrier_rect().centery)
@@ -114,7 +117,12 @@ class Map:
                 bottom = curr_bottom
         return bottom >= self.player_rect.top
 
+    def player_shoot(self):
+        bullet = PlayerBullet(self.player.get_rect(), 1, 2)
+        self.player_bullets.append(bullet)
+
     def update(self):
+
         for o in self.obstacles:
             if self.player_rect.left > o.get_rect().left or o.get_state == 1:
                 self.obstacles.remove(o)
@@ -128,6 +136,26 @@ class Map:
                 self.screen.blit(self.obstacle_img, (o.get_rect().x, o.get_rect().y))
                 # print(f"obstacle x: {o.get_rect().x} y: {o.get_rect().y}")
                 o.move(self.obstacles_speed)
+
+        for pb in self.player_bullets:
+            pygame.draw.circle(self.screen, (2, 255, 2), (pb.position.x, pb.position.y), 2)
+            hit = False
+            for b in self.barriers:
+                if pb.inside(b.get_rect()):
+                    b.receive_dmg(pb.dmg)
+                    hit = True
+                    break
+            if not hit:
+                for m in self.mobs:
+                    if pb.inside(m.get_rect()):
+                        m.receive_dmg(pb.dmg)
+                        hit = True
+                        break
+            if hit:
+                self.player_bullets.remove(pb)
+            pb.move()
+            if not pb.inside_map(self.get_mob_rect(), self.get_player_rect()):
+                self.player_bullets.remove(pb)
 
         for b in self.barriers:
             if not b.is_dead():
@@ -144,6 +172,7 @@ class Map:
                 self.screen.blit(m.img, (m.get_rect().x, m.get_rect().y))
             else:
                 self.mobs.remove(m)
+                self.mobs_speed += self.mobs_acceleration
 
         if self.mobs_go_right:
             if self.mob_right_out():

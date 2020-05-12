@@ -11,6 +11,9 @@ class Mob:
     def get_position(self):
         return self.position
 
+    def receive_dmg(self, dmg):
+        self.hp -= dmg
+
     def is_dead(self):
         return self.hp <= 0
 
