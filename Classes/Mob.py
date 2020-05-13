@@ -11,6 +11,9 @@ class Mob:
     def get_position(self):
         return self.position
 
+    def get_bullet_type(self):
+        return self.bullet_type
+
     def receive_dmg(self, dmg):
         self.hp -= dmg
 

@@ -2,6 +2,7 @@ from secrets import randbelow
 import pygame
 
 from .Mob import Mob
+from .MobBullet import MobBullet
 from .Obstacle import Obstacle
 from .PlayerBullet import PlayerBullet
 from .Position import Position
@@ -10,7 +11,7 @@ from .Barrier import Barrier
 
 
 class Map:
-    def __init__(self, obstacle_spawn_likelihood, screen, mobs_speed, mobs_acceleration, mobs_down_speed,
+    def __init__(self, obstacle_spawn_likelihood, screen, mobs_speed, mobs_acceleration, mobs_down_speed, mob_shoot_likelihood,
                  obstacles_speed=1, x=400, y=400,
                  obstacle_img="broom.png", player_img="tank.png", barrier_img="broom.png",
                  barrier_width=10,
@@ -37,6 +38,8 @@ class Map:
         self.player_bullets = []
         self.mob_bullets = []
         self.barriers = []
+        self.mob_shoot_likelihood = mob_shoot_likelihood
+
         for i in range(1, 4):
             barrier_pos = Position(self.get_barrier_rect().centerx * i/2, self.get_barrier_rect().centery)
             barrier = Barrier(barrier_pos, 3,
@@ -121,6 +124,17 @@ class Map:
         bullet = PlayerBullet(self.player.get_rect(), 1, 2)
         self.player_bullets.append(bullet)
 
+    def mob_shoot(self, mob: Mob):
+        bullet = MobBullet(mob.get_rect(), mob.get_bullet_type())
+        self.mob_bullets.append(bullet)
+
+    def mob_random_shoot(self):
+        i = randbelow(1001)
+        if i < self.mob_shoot_likelihood:
+            m = randbelow(len(self.mobs))
+            self.mob_shoot(self.mobs[m])
+
+
     def update(self):
 
         for o in self.obstacles:
@@ -156,6 +170,25 @@ class Map:
             pb.move()
             if not pb.inside_map(self.get_mob_rect(), self.get_player_rect()):
                 self.player_bullets.remove(pb)
+        self.mob_random_shoot()
+        for mb in self.mob_bullets:
+            pygame.draw.circle(self.screen, (2, 255, 2), (mb.position.x, mb.position.y), 2)
+            hit = False
+            for b in self.barriers:
+                if mb.inside(b.get_rect()):
+                    b.receive_dmg(mb.dmg)
+                    hit = True
+                    break
+            if not hit:
+                if mb.inside(self.player.get_rect()):
+                    self.player.take_damage(mb.dmg)
+                    print("Hit by bullet, remaining hp: " + str(self.player.hp))
+                    hit = True
+            if hit:
+                self.mob_bullets.remove(mb)
+            mb.move()
+            if not mb.inside_map(self.get_mob_rect(), self.get_player_rect()):
+                self.mob_bullets.remove(mb)
 
         for b in self.barriers:
             if not b.is_dead():
