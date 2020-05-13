@@ -1,5 +1,4 @@
 from .BulletInterface import BulletInterface
-from .BulletMob import BulletMob
 from .BulletPlayer import BulletPlayer
 from .Map import Map
 from .Mob import Mob
