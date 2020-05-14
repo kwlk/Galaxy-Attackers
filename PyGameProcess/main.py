@@ -15,7 +15,7 @@ pygame.display.set_icon(pygame.image.load("school.png"))
 player_position = Position(game_map.player_rect.centerx, game_map.player_rect.centery)
 player_speed = Position(0, 0)
 player = Player(speed_vector=Position(0, 0), max_hp=1000, position=player_position,
-                rect=game_map.player_img.get_rect(center=(player_position.x, player_position.y)))
+                rect=game_map.player_img.get_rect(center=(player_position.x, player_position.y)), speed=1)
 game_map.set_player(player)
 
 # barriers?

@@ -44,7 +44,6 @@ class Map:
         self.mob_bullets = []
         self.barriers = []
         self.power_ups = []
-        self.power_ups_in_work = []
 
         for i in range(1, 4):
             barrier_pos = Position(self.barrier_rect.centerx * i / 2, self.barrier_rect.centery)
@@ -83,27 +82,11 @@ class Map:
         if i < self.power_up_likelihood:
             self.power_ups.append(self.generate_power_up())
 
-    def stop_power_up(self, power_up: PowerUp):
-        if power_up.type == Type.fast_up_player:
-            self.player.faster = 0
-        if power_up.type == Type.fast_up_mob:
-            self.mobs_speed -= 1
-        if power_up.type == Type.fast_up_obstacle and self.obstacles_speed > 0:
-            self.obstacles_speed -= 1
-        if power_up.type == Type.slow_down_obstacle and self.obstacles_speed < 1:
-            self.obstacles_speed += 1
-
     def delete_old_power_ups(self):
         t = timeit.timeit()
-        if len(self.power_ups) > 0:
-            for pu in self.power_ups:
-                if t - pu.timestamp > self.power_up_lifespan:
-                    self.power_ups.remove(pu)
-        if len(self.power_ups_in_work) > 0:
-            for pu in self.power_ups_in_work:
-                if t - pu.timestamp > self.power_up_lifespan:
-                    self.stop_power_up(pu)
-                    self.power_ups.remove(pu)
+        for pu in self.power_ups:
+            if t - pu.timestamp > self.power_up_lifespan:
+                self.power_ups.remove(pu)
 
     def generate_power_up(self):
         print("I'm generating a Power-up!")
@@ -144,25 +127,21 @@ class Map:
             if bullet:
                 self.mob_bullets.append(bullet)
 
-    def start_power_up(self, power_up: PowerUp):
+    def apply_power_up(self, power_up: PowerUp):
         if power_up.type == Type.fast_up_player:
-            self.player.faster = 1
-            return
-        if power_up.type == Type.fast_up_mob:
+            self.player.speed += 1
+        elif power_up.type == Type.fast_up_mob:
             self.mobs_speed += 1
-            return
-        if power_up.type == Type.fast_up_obstacle:
+        elif power_up.type == Type.fast_up_obstacle:
             self.obstacles_speed += 1
-            return
-        if power_up.type == Type.slow_down_obstacle and self.obstacles_speed > 0:
+        elif power_up.type == Type.slow_down_obstacle and self.obstacles_speed > 0:
             self.obstacles_speed -= 1
 
     def power_up_update(self):
         self.delete_old_power_ups()
         for pu in self.power_ups:
             if pu.inside(self.player.rect):
-                self.start_power_up(pu)
-                self.power_ups_in_work.append(pu)
+                self.apply_power_up(pu)
                 self.power_ups.remove(pu)
             else:
                 self.screen.blit(pu.image, (pu.rect.x, pu.rect.y))
