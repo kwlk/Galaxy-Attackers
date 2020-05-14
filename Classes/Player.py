@@ -26,9 +26,6 @@ class Player:
     def take_damage(self, damage):
         self.hp -= damage
 
-    def get_position(self):
-        return self.getPosition()
-
     def is_dead(self):
         return self.hp <= 0
 
