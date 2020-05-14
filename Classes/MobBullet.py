@@ -3,12 +3,11 @@ import pygame
 from Classes.Position import Position
 
 
-# from here
 class MobBullet:
-    def __init__(self, mob_rect: pygame.rect, bullet_dmg):
+    def __init__(self, mob_rect: pygame.rect):
         self.position = Position(mob_rect.centerx, mob_rect.centery)
         self.speed = 1
-        self.dmg = bullet_dmg
+        self.dmg = 1
 
     def inside(self, rect: pygame.rect):
         if (self.position.x <= rect.left) or (self.position.x >= rect.left + rect.width) or (
@@ -23,5 +22,3 @@ class MobBullet:
 
     def move(self):
         self.position.y += self.speed
-# to here
-# could be joined for both bullets? just change the move vector / bullet type
