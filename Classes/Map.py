@@ -28,7 +28,6 @@ class Map:
         self.power_up_likelihood = power_up_likelihood
         self.power_up_lifespan = power_up_lifespan
         self.player_rect = pygame.Rect(0, y - player_width, x, player_width)
-        # print(f"player rect arguments: 0, {y-player_width}, {x}, {player_width}")
         self.barrier_rect = pygame.Rect(0, y - player_width - barrier_width, x, barrier_width)
         self.mob_rect = pygame.Rect(0, 0, x, y - barrier_width - player_width)
         self.obstacle_img = pygame.transform.scale(pygame.image.load(obstacle_img), (32, 32))
@@ -163,7 +162,7 @@ class Map:
         for pu in self.power_ups:
             if pu.inside(self.player.rect):
                 self.start_power_up(pu)
-                self.power_ups_in_work.append(pu.copy())
+                self.power_ups_in_work.append(pu)
                 self.power_ups.remove(pu)
             else:
                 self.screen.blit(pu.image, (pu.rect.x, pu.rect.y))
