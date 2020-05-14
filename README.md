@@ -1,4 +1,4 @@
 # Galaxy-Attackers
 Python Project
 
-This is a readme file
+Shoot'em up style game
