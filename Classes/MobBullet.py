@@ -5,13 +5,10 @@ from Classes.Position import Position
 
 # from here
 class MobBullet:
-    def __init__(self, mob_rect: pygame.rect, mob_bullet_type=1):
+    def __init__(self, mob_rect: pygame.rect, bullet_dmg):
         self.position = Position(mob_rect.centerx, mob_rect.centery)
         self.speed = 1
-        self.dmg = 1
-        if mob_bullet_type == 1:
-            self.speed = 1
-            self.dmg = 10
+        self.dmg = bullet_dmg
 
     def inside(self, rect: pygame.rect):
         if (self.position.x <= rect.left) or (self.position.x >= rect.left + rect.width) or (
