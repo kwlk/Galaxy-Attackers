@@ -10,12 +10,6 @@ class Player:
         self.rect = rect
         self.speed = speed
 
-    def shoot(self):
-        return self.bullet_type
-
-    def get_rect(self):
-        return self.rect
-
     def move(self, where: tuple):
         if where[0]:
             self.position = Position(self.position.x + self.speed_vector.x * self.speed, self.position.y)

@@ -12,6 +12,3 @@ class Barrier:
 
     def is_dead(self):
         return self.hp <= 0
-
-    def get_rect(self):
-        return self.rect
