@@ -142,7 +142,7 @@ class Map:
 
     def show_score(self):
         font = pygame.font.Font('freesansbold.ttf', 20)
-        score = font.render("LIFE LEFT: "+ str(self.player.hp)+" level: "+ str(self.difficulty), True, (255, 255, 255))
+        score = font.render(" level: "+ str(self.difficulty), True, (255, 255, 255))
         score_rect = score.get_rect()
         score_rect.center = (self.x/2, self.score_size/2)
         self.screen.blit(score, score_rect)
@@ -247,6 +247,12 @@ class Map:
 
         self.mobs_shoot()
 
+    def show_hp(self):
+        heart_img = pygame.transform.scale(pygame.image.load("heart.png"), (16, 16))
+        heart_rect = heart_img.get_rect(center=(20, 20))
+        for i in range(self.player.hp):
+            self.screen.blit(heart_img, (heart_rect.x + i * 20, heart_rect.y))
+
     def update(self):
         if self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, self.player.speed_vector.y)):
             self.player.move()
@@ -258,6 +264,7 @@ class Map:
         self.barriers_update()
         self.power_up_update()
         self.show_score()
+        self.show_hp()
 
         if self.mobs_won():
             self.game_over = True
