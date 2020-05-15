@@ -14,9 +14,9 @@ starter_player_speed = 1
 starter_mobs_acceleration = 0.1
 screen = pygame.display.set_mode(size)
 model = 0
-game_map = Map(screen=screen, x=size[0], y=size[1], power_up_likelihood=2, power_up_lifespan=5,
+game_map = Map(screen=screen, x=size[0], y=size[1], pu_spawn_rate=2, power_up_lifespan=5,
                obstacles_speed=starter_obstacle_speed,
-               mobs_down_speed=starter_mobs_down_speed, obstacle_spawn_likelihood=10, mobs_speed=starter_mobs_speed,
+               mobs_down_speed=starter_mobs_down_speed, obstacle_spawn_rate=10, mobs_speed=starter_mobs_speed,
                mobs_acceleration=starter_mobs_acceleration, difficulty=0,
                score_size=50)
 pygame.display.set_caption("Galaxy Attackers", "Galaxy Attackers")
@@ -33,10 +33,10 @@ clock = pygame.time.Clock()
 
 def reset(current_map):
     new_map = Map(screen=current_map.screen, x=current_map.x, y=current_map.y,
-                  power_up_likelihood=current_map.power_up_likelihood, power_up_lifespan=current_map.power_up_lifespan,
+                  pu_spawn_rate=current_map.power_up_likelihood, power_up_lifespan=current_map.power_up_lifespan,
                   obstacles_speed=starter_obstacle_speed,
                   mobs_down_speed=starter_mobs_speed,
-                  obstacle_spawn_likelihood=current_map.obstacle_spawn_likelihood, mobs_speed=starter_mobs_speed,
+                  obstacle_spawn_rate=current_map.obstacle_spawn_likelihood, mobs_speed=starter_mobs_speed,
                   mobs_acceleration=starter_mobs_acceleration, difficulty=current_map.difficulty,
                   score_size=current_map.score_size)
     new_map.set_player(Player.spawn(player_position, model))

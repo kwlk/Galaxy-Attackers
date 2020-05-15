@@ -14,16 +14,16 @@ from .PowerUp import Type
 
 
 class Map:
-    def __init__(self, obstacle_spawn_likelihood, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
-                 power_up_likelihood, power_up_lifespan, score_size,obstacles_speed=1, x=400, y=400,
+    def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
+                 pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed=1, x=400, y=400,
                  obstacle_img="broom.png", barrier_img="broom.png", barrier_width=10, player_width=130):
         self.x = x
         self.y = y
         self.difficulty = difficulty
         self.obstacles = []
         self.obstacles_speed = obstacles_speed
-        self.obstacle_spawn_likelihood = obstacle_spawn_likelihood
-        self.power_up_likelihood = power_up_likelihood
+        self.obstacle_spawn_rate = obstacle_spawn_rate
+        self.pu_spawn_rate = pu_spawn_rate
         self.power_up_lifespan = power_up_lifespan
         self.player_rect = pygame.Rect(0, y - player_width, x, player_width)
         self.barrier_rect = pygame.Rect(0, y - player_width - barrier_width, x, barrier_width)
@@ -39,15 +39,20 @@ class Map:
         self.player_bullets = []
         self.mob_bullets = []
         self.barriers = []
+        self.init_barriers()
         self.power_ups = []
         self.score_size = score_size
+        self.mobs = []
+        self.init_mobs()
 
+    def init_barriers(self):
         for i in range(1, 4):
             barrier_pos = Position(self.barrier_rect.centerx * i / 2, self.barrier_rect.centery)
             barrier = Barrier(barrier_pos, 3,
                               self.barrier_img.get_rect(center=(barrier_pos.x, barrier_pos.y)))
             self.barriers.append(barrier)
-        self.mobs = []
+
+    def init_mobs(self):
         for i in range(2, 8):
             for j in range(2, 6):
                 mob_pos = Position(self.mob_rect.centerx * i / 5, self.mob_rect.centery * j / 4 - 100)
@@ -79,12 +84,12 @@ class Map:
 
     def spam_obstacle(self):
         i = randbelow(1001)
-        if i < self.obstacle_spawn_likelihood:
+        if i < self.obstacle_spawn_rate:
             self.obstacles.append(self.generateObstacle())
 
     def spam_power_up(self):
         i = randbelow(1001)
-        if i < self.power_up_likelihood:
+        if i < self.pu_spawn_rate:
             self.power_ups.append(self.generate_power_up())
 
     def delete_old_power_ups(self):
