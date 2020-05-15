@@ -16,7 +16,7 @@ from .PowerUp import Type
 class Map:
     def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
                  pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed=1, x=400, y=400,
-                 obstacle_img="broom.png", barrier_img="broom.png", barrier_width=10, player_width=130):
+                 obstacle_img="broom.png", barrier_width=10, player_width=130):
         self.x = x
         self.y = y
         self.difficulty = difficulty
@@ -31,7 +31,6 @@ class Map:
         self.obstacle_img = pygame.transform.scale(pygame.image.load(obstacle_img), (32, 32))
         self.screen = screen
         self.player = None
-        self.barrier_img = pygame.transform.scale(pygame.image.load(barrier_img), (64, 16))
         self.mobs_speed = mobs_speed
         self.mobs_acceleration = mobs_acceleration
         self.mobs_go_right = True
@@ -48,8 +47,7 @@ class Map:
     def init_barriers(self):
         for i in range(1, 4):
             barrier_pos = Position(self.barrier_rect.centerx * i / 2, self.barrier_rect.centery)
-            barrier = Barrier(barrier_pos, 3,
-                              self.barrier_img.get_rect(center=(barrier_pos.x, barrier_pos.y)))
+            barrier = Barrier(barrier_pos, 3)
             self.barriers.append(barrier)
 
     def init_mobs(self):
@@ -220,7 +218,7 @@ class Map:
     def barriers_update(self):
         for b in self.barriers:
             if not b.is_dead():
-                self.screen.blit(self.barrier_img, (b.rect.x, b.rect.y))
+                self.screen.blit(b.img, (b.rect.x, b.rect.y))
             else:
                 self.barriers.remove(b)
 
