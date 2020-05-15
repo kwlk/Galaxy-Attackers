@@ -31,7 +31,6 @@ class Map:
         self.obstacle_img = pygame.transform.scale(pygame.image.load(obstacle_img), (32, 32))
         self.screen = screen
         self.player = None
-        self.game_over = False
         self.barrier_img = pygame.transform.scale(pygame.image.load(barrier_img), (64, 16))
         self.mobs_speed = mobs_speed
         self.mobs_acceleration = mobs_acceleration
@@ -42,7 +41,6 @@ class Map:
         self.barriers = []
         self.power_ups = []
         self.score_size = score_size
-        self.game_won = False
 
         for i in range(1, 4):
             barrier_pos = Position(self.barrier_rect.centerx * i / 2, self.barrier_rect.centery)
@@ -54,6 +52,14 @@ class Map:
             for j in range(2, 6):
                 mob_pos = Position(self.mob_rect.centerx * i / 5, self.mob_rect.centery * j / 4 - 100)
                 self.mobs.append(Mob.spawn(self.difficulty, mob_pos))
+
+    def game_won(self):
+        if self.mobs:
+            return False
+        return True
+
+    def game_over(self):
+        return self.mobs_won() or self.player.is_dead()
 
     def set_player(self, player: Player):
         self.player = player
@@ -157,8 +163,6 @@ class Map:
                 self.obstacles.remove(o)
             elif self.player.rect.colliderect(o.rect):
                 self.player.take_damage(o.dmg)
-                if self.player.is_dead():
-                    self.game_over = True
                 self.obstacles.remove(o)
             else:
                 self.screen.blit(self.obstacle_img, (o.rect.x, o.rect.y))
@@ -268,11 +272,6 @@ class Map:
         self.power_up_update()
         self.show_score()
         self.show_hp()
-
-        if self.mobs_won():
-            self.game_over = True
-        if len(self.mobs) == 0:
-            self.game_won = True
 
         self.screen.blit(self.player.img, (self.player.rect.x, self.player.rect.y))
 
