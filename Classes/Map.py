@@ -248,10 +248,13 @@ class Map:
 
     def move_player(self):
         where = [True, True]
+        dist = self.player.speed
         if self.player.speed_vector.x == 1 or self.player.speed_vector.x == -1:
-            where[0] = self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, 0))
+            where[0] = self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, -dist)) or \
+                       self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, dist))
         if self.player.speed_vector.y == 1 or self.player.speed_vector.y == -1:
-            where[1] = self.player_rect.contains(self.player.rect.move(0, self.player.speed_vector.y))
+            where[1] = self.player_rect.contains(self.player.rect.move(-dist, self.player.speed_vector.y)) or \
+                       self.player_rect.contains(self.player.rect.move(dist, self.player.speed_vector.y))
         self.player.move(where)
 
     def update(self):
