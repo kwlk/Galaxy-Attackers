@@ -33,7 +33,7 @@ class PowerUp:
         self.timestamp = timestamp
         self.image = pygame.Surface((16, 16))
         self.image.fill(color)
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(center=(position.x, position.y))
         self.type = type
 
     def inside(self, rect: pygame.rect):
@@ -49,5 +49,4 @@ class PowerUp:
             return PowerUp(position, timestamp, NAVYBLUE, Type.fast_up_mob)
         if p < 75:
             return PowerUp(position, timestamp, WHITE, Type.fast_up_obstacle)
-        if p < 75:
-            return PowerUp(position, timestamp, RED, Type.slow_down_obstacle)
+        return PowerUp(position, timestamp, RED, Type.slow_down_obstacle)
