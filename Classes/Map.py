@@ -253,10 +253,17 @@ class Map:
         for i in range(self.player.hp):
             self.screen.blit(heart_img, (heart_rect.x + i * 20, heart_rect.y))
 
-    def update(self):
-        if self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, self.player.speed_vector.y)):
-            self.player.move()
+    def move_player(self):
+        where = [True, True]
+        if self.player.speed_vector.x == 1 or self.player.speed_vector.x == -1:
+            where[0] = self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, 0))
+        if self.player.speed_vector.y == 1 or self.player.speed_vector.y == -1:
+            where[1] = self.player_rect.contains(self.player.rect.move(0, self.player.speed_vector.y))
+        self.player.move(where)
 
+    def update(self):
+
+        self.move_player()
         self.obstacle_update()
         self.player_bullets_update()
         self.mob_bullets_update()
