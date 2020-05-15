@@ -2,13 +2,20 @@ from .Position import Position
 import pygame
 
 
+def quick(position: Position):
+    player_img = pygame.transform.scale(pygame.image.load("tank.png"), (64, 64))
+    return Player(Position(0, 0), 3, position, player_img.get_rect(center=(position.x, position.y)), 2, player_img)
+
+
 class Player:
-    def __init__(self, speed_vector: Position, max_hp, position: Position, rect, speed):
+
+    def __init__(self, speed_vector: Position, max_hp, position: Position, rect, speed, img):
         self.speed_vector = speed_vector
         self.hp = max_hp
         self.position = position
         self.rect = rect
         self.speed = speed
+        self.img = img
 
     def move(self, where: tuple):
         if where[0]:
@@ -23,4 +30,9 @@ class Player:
 
     def is_dead(self):
         return self.hp <= 0
+
+    @classmethod
+    def spawn(cls, position: Position, model):
+        if model == 0:
+            return quick(position)
 

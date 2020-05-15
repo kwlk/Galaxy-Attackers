@@ -15,11 +15,8 @@ from .PowerUp import Type
 
 class Map:
     def __init__(self, obstacle_spawn_likelihood, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
-                 power_up_likelihood, power_up_lifespan, score_size,
-                 obstacles_speed=1, x=400, y=400,
-                 obstacle_img="broom.png", player_img="tank.png", barrier_img="broom.png",
-                 barrier_width=10,
-                 player_width=130):
+                 power_up_likelihood, power_up_lifespan, score_size,obstacles_speed=1, x=400, y=400,
+                 obstacle_img="broom.png", barrier_img="broom.png", barrier_width=10, player_width=130):
         self.x = x
         self.y = y
         self.difficulty = difficulty
@@ -35,7 +32,6 @@ class Map:
         self.screen = screen
         self.player = None
         self.game_over = False
-        self.player_img = pygame.transform.scale(pygame.image.load(player_img), (64, 64))
         self.barrier_img = pygame.transform.scale(pygame.image.load(barrier_img), (64, 16))
         self.mobs_speed = mobs_speed
         self.mobs_acceleration = mobs_acceleration
@@ -51,7 +47,7 @@ class Map:
         for i in range(1, 4):
             barrier_pos = Position(self.barrier_rect.centerx * i / 2, self.barrier_rect.centery)
             barrier = Barrier(barrier_pos, 3,
-                              self.player_img.get_rect(center=(barrier_pos.x, barrier_pos.y)))
+                              self.barrier_img.get_rect(center=(barrier_pos.x, barrier_pos.y)))
             self.barriers.append(barrier)
         self.mobs = []
         for i in range(2, 8):
@@ -92,7 +88,6 @@ class Map:
                 self.power_ups.remove(pu)
 
     def generate_power_up(self):
-        print("I'm generating a Power-up!")
         return PowerUp.spawn(Position(randbelow(self.x), randbelow(self.player_rect.height) + self.player_rect.top),
                              timeit.timeit())
 
@@ -162,7 +157,6 @@ class Map:
                 self.obstacles.remove(o)
             elif self.player.rect.colliderect(o.rect):
                 self.player.take_damage(o.dmg)
-                print("Hit by obstacle, remaining hp: " + str(self.player.hp))
                 if self.player.is_dead():
                     self.game_over = True
                 self.obstacles.remove(o)
@@ -206,7 +200,6 @@ class Map:
             if not hit:
                 if mb.inside(self.player.rect):
                     self.player.take_damage(mb.dmg)
-                    print("Hit by bullet, remaining hp: " + str(self.player.hp))
                     hit = True
             if hit:
                 self.mob_bullets.remove(mb)
@@ -278,7 +271,7 @@ class Map:
         if len(self.mobs) == 0:
             self.game_won = True
 
-        self.screen.blit(self.player_img, (self.player.rect.x, self.player.rect.y))
+        self.screen.blit(self.player.img, (self.player.rect.x, self.player.rect.y))
 
         self.spam_obstacle()
         self.spam_power_up()
