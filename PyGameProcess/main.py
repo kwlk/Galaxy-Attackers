@@ -166,7 +166,7 @@ for i in range(4):
     if game_on:
         game_map.difficulty = i
         success = False
-        while not success:
+        while not success and game_on:
             game_map = reset(game_map)
             success = game()
             if success is None:
