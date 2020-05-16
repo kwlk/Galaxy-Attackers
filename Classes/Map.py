@@ -13,9 +13,8 @@ from .PowerUp import Type
 
 
 class Map:
-    def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
-                 pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed=1, x=400, y=400,
-                 obstacle_img="broom.png", barrier_width=10, player_width=200):
+    def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty, x, y,
+                 pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed, barrier_width=10, player_width=200):
         self.x = x
         self.y = y
         self.difficulty = difficulty
@@ -27,7 +26,7 @@ class Map:
         self.player_rect = pygame.Rect(0, y - player_width, x, player_width)
         self.barrier_rect = pygame.Rect(0, y - player_width - barrier_width, x, barrier_width)
         self.mob_rect = pygame.Rect(0, score_size, x, y - barrier_width - player_width-score_size)
-        self.obstacle_img = pygame.transform.scale(pygame.image.load(obstacle_img), (32, 32))
+        self.obstacle_img = pygame.transform.scale(pygame.image.load("broom.png"), (32, 32))
         self.screen = screen
         self.player = None
         self.mobs_speed = mobs_speed
