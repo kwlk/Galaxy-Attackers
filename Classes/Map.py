@@ -12,21 +12,17 @@ from .PowerUp import PowerUp
 from .PowerUp import Type
 
 
-
 class Map:
-    def __init__(self, obstacle_spawn_likelihood, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
-                 power_up_likelihood, power_up_lifespan, score_size,
-                 obstacles_speed=1, x=400, y=400,
-                 obstacle_img="broom.png", player_img="tank.png", barrier_img="broom.png",
-                 barrier_width=10,
-                 player_width=130):
+    def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
+                 pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed=1, x=400, y=400,
+                 obstacle_img="broom.png", barrier_width=10, player_width=130):
         self.x = x
         self.y = y
         self.difficulty = difficulty
         self.obstacles = []
         self.obstacles_speed = obstacles_speed
-        self.obstacle_spawn_likelihood = obstacle_spawn_likelihood
-        self.power_up_likelihood = power_up_likelihood
+        self.obstacle_spawn_rate = obstacle_spawn_rate
+        self.pu_spawn_rate = pu_spawn_rate
         self.power_up_lifespan = power_up_lifespan
         self.player_rect = pygame.Rect(0, y - player_width, x, player_width)
         self.barrier_rect = pygame.Rect(0, y - player_width - barrier_width, x, barrier_width)
@@ -34,9 +30,6 @@ class Map:
         self.obstacle_img = pygame.transform.scale(pygame.image.load(obstacle_img), (32, 32))
         self.screen = screen
         self.player = None
-        self.game_over = False
-        self.player_img = pygame.transform.scale(pygame.image.load(player_img), (64, 64))
-        self.barrier_img = pygame.transform.scale(pygame.image.load(barrier_img), (64, 16))
         self.mobs_speed = mobs_speed
         self.mobs_acceleration = mobs_acceleration
         self.mobs_go_right = True
@@ -44,20 +37,31 @@ class Map:
         self.player_bullets = []
         self.mob_bullets = []
         self.barriers = []
+        self.init_barriers()
         self.power_ups = []
         self.score_size = score_size
-        self.game_won = False
+        self.mobs = []
+        self.init_mobs()
 
+    def init_barriers(self):
         for i in range(1, 4):
             barrier_pos = Position(self.barrier_rect.centerx * i / 2, self.barrier_rect.centery)
-            barrier = Barrier(barrier_pos, 3,
-                              self.player_img.get_rect(center=(barrier_pos.x, barrier_pos.y)))
+            barrier = Barrier(barrier_pos, 3)
             self.barriers.append(barrier)
-        self.mobs = []
+
+    def init_mobs(self):
         for i in range(2, 8):
             for j in range(2, 6):
                 mob_pos = Position(self.mob_rect.centerx * i / 5, self.mob_rect.centery * j / 4 - 100)
                 self.mobs.append(Mob.spawn(self.difficulty, mob_pos))
+
+    def game_won(self):
+        if self.mobs:
+            return False
+        return True
+
+    def game_over(self):
+        return self.mobs_won() or self.player.is_dead()
 
     def set_player(self, player: Player):
         self.player = player
@@ -77,12 +81,12 @@ class Map:
 
     def spam_obstacle(self):
         i = randbelow(1001)
-        if i < self.obstacle_spawn_likelihood:
+        if i < self.obstacle_spawn_rate:
             self.obstacles.append(self.generateObstacle())
 
     def spam_power_up(self):
         i = randbelow(1001)
-        if i < self.power_up_likelihood:
+        if i < self.pu_spawn_rate:
             self.power_ups.append(self.generate_power_up())
 
     def delete_old_power_ups(self):
@@ -92,7 +96,6 @@ class Map:
                 self.power_ups.remove(pu)
 
     def generate_power_up(self):
-        print("I'm generating a Power-up!")
         return PowerUp.spawn(Position(randbelow(self.x), randbelow(self.player_rect.height) + self.player_rect.top),
                              timeit.timeit())
 
@@ -142,7 +145,7 @@ class Map:
 
     def show_score(self):
         font = pygame.font.Font('freesansbold.ttf', 20)
-        score = font.render("LIFE LEFT: "+ str(self.player.hp)+" level: "+ str(self.difficulty), True, (255, 255, 255))
+        score = font.render(" level: "+ str(self.difficulty), True, (255, 255, 255))
         score_rect = score.get_rect()
         score_rect.center = (self.x/2, self.score_size/2)
         self.screen.blit(score, score_rect)
@@ -162,9 +165,6 @@ class Map:
                 self.obstacles.remove(o)
             elif self.player.rect.colliderect(o.rect):
                 self.player.take_damage(o.dmg)
-                print("Hit by obstacle, remaining hp: " + str(self.player.hp))
-                if self.player.is_dead():
-                    self.game_over = True
                 self.obstacles.remove(o)
             else:
                 self.screen.blit(self.obstacle_img, (o.rect.x, o.rect.y))
@@ -206,7 +206,6 @@ class Map:
             if not hit:
                 if mb.inside(self.player.rect):
                     self.player.take_damage(mb.dmg)
-                    print("Hit by bullet, remaining hp: " + str(self.player.hp))
                     hit = True
             if hit:
                 self.mob_bullets.remove(mb)
@@ -218,7 +217,7 @@ class Map:
     def barriers_update(self):
         for b in self.barriers:
             if not b.is_dead():
-                self.screen.blit(self.barrier_img, (b.rect.x, b.rect.y))
+                self.screen.blit(b.img, (b.rect.x, b.rect.y))
             else:
                 self.barriers.remove(b)
 
@@ -247,10 +246,26 @@ class Map:
 
         self.mobs_shoot()
 
-    def update(self):
-        if self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, self.player.speed_vector.y)):
-            self.player.move()
+    def show_hp(self):
+        heart_img = pygame.transform.scale(pygame.image.load("heart.png"), (16, 16))
+        heart_rect = heart_img.get_rect(center=(20, 20))
+        for i in range(self.player.hp):
+            self.screen.blit(heart_img, (heart_rect.x + i * 20, heart_rect.y))
 
+    def move_player(self):
+        where = [True, True]
+        dist = self.player.speed
+        if self.player.speed_vector.x == 1 or self.player.speed_vector.x == -1:
+            where[0] = self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, -dist)) or \
+                       self.player_rect.contains(self.player.rect.move(self.player.speed_vector.x, dist))
+        if self.player.speed_vector.y == 1 or self.player.speed_vector.y == -1:
+            where[1] = self.player_rect.contains(self.player.rect.move(-dist, self.player.speed_vector.y)) or \
+                       self.player_rect.contains(self.player.rect.move(dist, self.player.speed_vector.y))
+        self.player.move(where)
+
+    def update(self):
+
+        self.move_player()
         self.obstacle_update()
         self.player_bullets_update()
         self.mob_bullets_update()
@@ -258,13 +273,9 @@ class Map:
         self.barriers_update()
         self.power_up_update()
         self.show_score()
+        self.show_hp()
 
-        if self.mobs_won():
-            self.game_over = True
-        if len(self.mobs) == 0:
-            self.game_won = True
-
-        self.screen.blit(self.player_img, (self.player.rect.x, self.player.rect.y))
+        self.screen.blit(self.player.img, (self.player.rect.x, self.player.rect.y))
 
         self.spam_obstacle()
         self.spam_power_up()
