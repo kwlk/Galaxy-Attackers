@@ -15,7 +15,7 @@ from .PowerUp import Type
 class Map:
     def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
                  pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed=1, x=400, y=400,
-                 obstacle_img="broom.png", barrier_width=10, player_width=130):
+                 obstacle_img="broom.png", barrier_width=10, player_width=200):
         self.x = x
         self.y = y
         self.difficulty = difficulty

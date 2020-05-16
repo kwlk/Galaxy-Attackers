@@ -16,7 +16,7 @@ screen = pygame.display.set_mode(size)
 model = 0
 game_map = Map(screen=screen, x=size[0], y=size[1], pu_spawn_rate=2, power_up_lifespan=5,
                obstacles_speed=starter_obstacle_speed,
-               mobs_down_speed=starter_mobs_down_speed, obstacle_spawn_rate=10, mobs_speed=starter_mobs_speed,
+               mobs_down_speed=starter_mobs_down_speed, obstacle_spawn_rate=5, mobs_speed=starter_mobs_speed,
                mobs_acceleration=starter_mobs_acceleration, difficulty=0,
                score_size=50)
 pygame.display.set_caption("Galaxy Attackers", "Galaxy Attackers")
@@ -44,16 +44,18 @@ def reset(current_map):
 
 
 def game_intro():
+    global game_on
     intro = True
-    play = True
-    while intro:
+    while intro and game_on:
         clock.tick(120)
         screen.fill((0, 0, 0))
         for event in pygame.event.get():
-            if event.type == pygame.K_ESCAPE:
-                play = False
+            if event.type == pygame.QUIT:
+                game_on = False
                 intro = False
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    game_on = False
                 intro = False
         text_font_1 = pygame.font.Font("freesansbold.ttf", 64)
         text_1 = text_font_1.render("GALAXY ATTACKERS", True, (255, 255, 255))
@@ -66,10 +68,10 @@ def game_intro():
         screen.blit(text_1, text_1_rect)
         screen.blit(text_2, text_2_rect)
         pygame.display.update()
-    return play
 
 
-def game_outro(game_not_over):
+def game_outro():
+    game_not_over = True
     while game_not_over:
         clock.tick(120)
         screen.fill((0, 0, 0))
@@ -97,16 +99,18 @@ def game_outro(game_not_over):
 
 
 def level_over(text):
+    global game_on
     intro = True
-    play = True
     while intro:
         clock.tick(120)
         screen.fill((0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                play = False
+                game_on = False
                 intro = False
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    game_on = False
                 intro = False
         text_font_1 = pygame.font.Font("freesansbold.ttf", 64)
         text_1 = text_font_1.render(text + "level " + str(game_map.difficulty), True, (255, 255, 255))
@@ -119,18 +123,19 @@ def level_over(text):
         screen.blit(text_1, text_1_rect)
         screen.blit(text_2, text_2_rect)
         pygame.display.update()
-    return play
 
 
 def game():
     global game_on
     win = False
-    while game_on:
+    play = True
+    while play and game_on:
         clock.tick(120)
         screen.fill((0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False, True
+                game_on = False
+                break
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     game_map.player.speed_vector.x = -1
@@ -144,6 +149,7 @@ def game():
                     game_map.player_shoot()
                 if event.key == pygame.K_ESCAPE:
                     game_on = False
+                    break
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     game_map.player.speed_vector.x = 0
@@ -152,15 +158,17 @@ def game():
         game_map.update()
         if game_map.game_over():
             win = False
-            break
+            play = False
         if game_map.game_won():
             win = True
-            break
+            play = False
         pygame.display.update()
     return win
 
 
-game_on = game_intro()
+# START OF THE GAME CODE
+game_on = True
+game_intro()
 pygame.display.set_mode(size, pygame.FULLSCREEN)
 for i in range(4):
     if game_on:
@@ -173,7 +181,7 @@ for i in range(4):
                 break
             if game_on:
                 if success:
-                    game_on = level_over("You won")
+                    level_over("You won ")
                 else:
-                    game_on = level_over("You lost")
-game_outro(game_on)
+                    level_over("You lost ")
+game_outro()
