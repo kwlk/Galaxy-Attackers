@@ -44,8 +44,8 @@ class Map:
         self.init_mobs()
 
     def init_barriers(self):
-        for i in range(1, 4):
-            barrier_pos = Position(self.barrier_rect.centerx * i / 2, self.barrier_rect.centery)
+        for i in range(1, 8):
+            barrier_pos = Position(self.barrier_rect.centerx * i / 4, self.barrier_rect.centery)
             barrier = Barrier(barrier_pos, 3)
             self.barriers.append(barrier)
 
