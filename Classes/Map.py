@@ -66,23 +66,14 @@ class Map:
     def set_player(self, player: Player):
         self.player = player
 
-    def generateObstacle(self):
+    def generate_obstacle(self):
         return Obstacle(Position(self.x, randbelow(self.player_rect.height) + self.player_rect.top),
                         self.obstacle_img)
-
-    def deleteObstacle(self, obstacle: Obstacle):
-        self.obstacles.remove(obstacle)
-
-    def speedUpObstacles(self, newSpeed=-1, speedDifference=0):
-        if newSpeed != -1:
-            self.obstacles_speed = newSpeed
-        else:
-            self.obstacles_speed += speedDifference
 
     def spam_obstacle(self):
         i = randbelow(1001)
         if i < self.obstacle_spawn_rate:
-            self.obstacles.append(self.generateObstacle())
+            self.obstacles.append(self.generate_obstacle())
 
     def spam_power_up(self):
         i = randbelow(1001)
@@ -145,7 +136,7 @@ class Map:
 
     def show_score(self):
         font = pygame.font.Font('freesansbold.ttf', 20)
-        score = font.render(" level: "+ str(self.difficulty), True, (255, 255, 255))
+        score = font.render(" level: " + str(self.difficulty), True, (255, 255, 255))
         score_rect = score.get_rect()
         score_rect.center = (self.x/2, self.score_size/2)
         self.screen.blit(score, score_rect)
