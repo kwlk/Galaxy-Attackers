@@ -53,6 +53,52 @@ def game_intro():
         screen.blit(text_2, text_2_rect)
         pygame.display.update()
 
+def menu():
+    global game_on
+    menu_on = True
+    highlight = [48, 32]
+    while menu_on and game_on:
+        clock.tick(120)
+        screen.fill((0, 0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_on = False
+                menu_on = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    game_on = False
+                if event.key == pygame.K_DOWN and highlight[1] == 32:
+                    highlight[0] = 32
+                    highlight[1] = 48
+                if event.key == pygame.K_UP and highlight[0] == 32:
+                    highlight[1] = 32
+                    highlight[0] = 48
+                if event.key == pygame.K_RETURN:
+                    menu_on = False
+        text_font_1 = pygame.font.Font("freesansbold.ttf", 96)
+        text_1 = text_font_1.render("MENU", True, (255, 255, 255))
+        text_1_rect = text_1.get_rect()
+        text_1_rect.center = (size[0] / 2, size[1] / 2 - 180)
+        text_font_3 = pygame.font.Font("freesansbold.ttf", 16)
+        text_3 = text_font_3.render("Choose your game mode", True, (255, 255, 255))
+        text_3_rect = text_3.get_rect()
+        text_3_rect.center = (size[0] / 2, size[1] / 2 - 120)
+        text_font_2 = pygame.font.Font("freesansbold.ttf", highlight[0])
+        text_2 = text_font_2.render("Level Mode", True, (255, 255, 255))
+        text_2_rect = text_2.get_rect()
+        text_2_rect.center = (size[0] / 2, size[1] / 2 - 5)
+        text_font_4 = pygame.font.Font("freesansbold.ttf", highlight[1])
+        text_4 = text_font_4.render("Endless Mode", True, (255, 255, 255))
+        text_4_rect = text_4.get_rect()
+        text_4_rect.center = (size[0] / 2, size[1] / 2 + 96)
+        screen.blit(text_1, text_1_rect)
+        screen.blit(text_2, text_2_rect)
+        screen.blit(text_3, text_3_rect)
+        screen.blit(text_4, text_4_rect)
+        pygame.display.update()
+    if highlight[0] == 48:
+        return False
+    return True
 
 def game_outro():
     game_not_over = True
@@ -153,6 +199,7 @@ def game():
 # START OF THE GAME CODE
 game_on = True
 game_intro()
+game_map.is_endless = menu()
 pygame.display.set_mode(size, pygame.FULLSCREEN)
 for i in range(4):
     if game_on:
