@@ -11,30 +11,44 @@ from .Barrier import Barrier
 from .PowerUp import PowerUp
 from .PowerUp import Type
 
+size = (1200, 900)
+barrier_width = 10
+player_width = 200
+score_size = 50
+
+starter_obstacle_speed = 1
+starter_mobs_down_speed = 20
+starter_mobs_speed = 1
+starter_player_speed = 1
+starter_mobs_acceleration = 0.1
+starter_obstacle_spawn_rate = 5
+starter_pu_spawn_rate = 2
+starter_pu_lifespan = 5
+player_rect = pygame.Rect(0, size[1] - player_width, size[0], player_width)
+player_position = Position(player_rect.centerx, player_rect.centery)
+
 
 class Map:
-
-    def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty, x, y,
-                 pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed, barrier_width=10, player_width=200):
-
-        self.x = x
-        self.y = y
+    def __init__(self, screen, is_endless, difficulty, model):
+        self.x = size[0]
+        self.y = size[1]
         self.difficulty = difficulty
+        self.is_endless = is_endless
         self.obstacles = []
-        self.obstacles_speed = obstacles_speed
-        self.obstacle_spawn_rate = obstacle_spawn_rate
-        self.pu_spawn_rate = pu_spawn_rate
-        self.power_up_lifespan = power_up_lifespan
-        self.player_rect = pygame.Rect(0, y - player_width, x, player_width)
-        self.barrier_rect = pygame.Rect(0, y - player_width - barrier_width, x, barrier_width)
-        self.mob_rect = pygame.Rect(0, score_size, x, y - barrier_width - player_width-score_size)
+        self.obstacle_speed = starter_obstacle_speed
+        self.obstacle_spawn_rate = starter_obstacle_spawn_rate
+        self.pu_spawn_rate = starter_pu_spawn_rate
+        self.pu_lifespan = starter_pu_lifespan
+        self.player_rect = player_rect
+        self.barrier_rect = pygame.Rect(0, size[1] - player_width - barrier_width, size[0], barrier_width)
+        self.mob_rect = pygame.Rect(0, score_size, size[0], size[1] - barrier_width - player_width-score_size)
         self.obstacle_img = pygame.transform.scale(pygame.image.load("comet1.png"), (64, 23))
         self.screen = screen
         self.player = None
-        self.mobs_speed = mobs_speed
-        self.mobs_acceleration = mobs_acceleration
+        self.mobs_speed = starter_mobs_speed
+        self.mobs_acceleration = starter_mobs_acceleration
         self.mobs_go_right = True
-        self.mobs_down_speed = mobs_down_speed
+        self.mobs_down_speed = starter_mobs_down_speed
         self.player_bullets = []
         self.mob_bullets = []
         self.barriers = []
@@ -43,6 +57,9 @@ class Map:
         self.score_size = score_size
         self.mobs = []
         self.init_mobs()
+
+    def story_level_up(self):
+        self = Map(self.screen, False, self.difficulty + 1, None)
 
     def init_barriers(self):
         for i in range(1, 8):
@@ -54,7 +71,10 @@ class Map:
         for i in range(2, 8):
             for j in range(2, 6):
                 mob_pos = Position(self.mob_rect.centerx * i / 5, self.mob_rect.centery * j / 4 - 100)
-                self.mobs.append(Mob.spawn(self.difficulty, mob_pos))
+                if self.is_endless:
+                    self.mobs.append(Mob.endless_spawn(self.difficulty, mob_pos))
+                else:
+                    self.mobs.append(Mob.spawn(self.difficulty, mob_pos))
 
     def game_won(self):
         if self.mobs:
@@ -84,7 +104,7 @@ class Map:
     def delete_old_power_ups(self):
         t = timeit.timeit()
         for pu in self.power_ups:
-            if t - pu.timestamp > self.power_up_lifespan:
+            if t - pu.timestamp > self.pu_lifespan:
                 self.power_ups.remove(pu)
 
     def generate_power_up(self):
@@ -131,9 +151,9 @@ class Map:
         elif power_up.type == Type.fast_up_mob:
             self.mobs_speed += 1
         elif power_up.type == Type.fast_up_obstacle:
-            self.obstacles_speed += 1
-        elif power_up.type == Type.slow_down_obstacle and self.obstacles_speed > 0:
-            self.obstacles_speed -= 1
+            self.obstacle_speed += 1
+        elif power_up.type == Type.slow_down_obstacle and self.obstacle_speed > 0:
+            self.obstacle_speed -= 1
 
     def show_score(self):
         font = pygame.font.Font('freesansbold.ttf', 20)
@@ -160,7 +180,7 @@ class Map:
                 self.obstacles.remove(o)
             else:
                 self.screen.blit(self.obstacle_img, (o.rect.x, o.rect.y))
-                o.move(self.obstacles_speed)
+                o.move(self.obstacle_speed)
 
     def player_bullets_update(self):
         removed = False

@@ -5,20 +5,10 @@ from Classes.Player import Player
 from Classes.Map import Map
 
 pygame.init()
-# display score on top?
 size = (1200, 900)
-starter_obstacle_speed = 1
-starter_mobs_down_speed = 20
-starter_mobs_speed = 1
-starter_player_speed = 1
-starter_mobs_acceleration = 0.1
 screen = pygame.display.set_mode(size)
 model = 0
-game_map = Map(screen=screen, x=size[0], y=size[1], pu_spawn_rate=2, power_up_lifespan=5,
-               obstacles_speed=starter_obstacle_speed,
-               mobs_down_speed=starter_mobs_down_speed, obstacle_spawn_rate=5, mobs_speed=starter_mobs_speed,
-               mobs_acceleration=starter_mobs_acceleration, difficulty=0,
-               score_size=50)
+game_map = Map(screen=screen, is_endless=False, model=model, difficulty=0)
 pygame.display.set_caption("Galaxy Attackers", "Galaxy Attackers")
 pygame.display.set_icon(pygame.image.load("school.png"))
 player_position = Position(game_map.player_rect.centerx, game_map.player_rect.centery)
@@ -32,13 +22,7 @@ clock = pygame.time.Clock()
 
 
 def reset(current_map):
-    new_map = Map(screen=current_map.screen, x=current_map.x, y=current_map.y,
-                  pu_spawn_rate=current_map.pu_spawn_rate, power_up_lifespan=current_map.power_up_lifespan,
-                  obstacles_speed=starter_obstacle_speed,
-                  mobs_down_speed=starter_mobs_speed,
-                  obstacle_spawn_rate=current_map.obstacle_spawn_rate, mobs_speed=starter_mobs_speed,
-                  mobs_acceleration=starter_mobs_acceleration, difficulty=current_map.difficulty,
-                  score_size=current_map.score_size)
+    new_map = Map(screen=current_map.screen, difficulty=current_map.difficulty, model=model, is_endless=False)
     new_map.set_player(Player.spawn(player_position, model))
     return new_map
 

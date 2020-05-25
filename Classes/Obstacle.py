@@ -11,7 +11,7 @@ class Obstacle:
         return self.state
 
     def move(self, x_vector):
-        self.rect = self.rect.move(-x_vector, 0)
+        self.rect = self.rect.move(round(-x_vector), 0)
 
     def change_dmg(self, new_damage):
         self.dmg = new_damage

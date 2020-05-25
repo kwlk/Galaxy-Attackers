@@ -20,10 +20,10 @@ class Player:
     def move(self, where: tuple):
         if where[0]:
             self.position = Position(self.position.x + self.speed_vector.x * self.speed, self.position.y)
-            self.rect = self.rect.move(self.speed_vector.x * self.speed, 0)
+            self.rect = self.rect.move(round(self.speed_vector.x * self.speed), 0)
         if where[1]:
             self.position = Position(self.position.x, self.position.y + self.speed_vector.y * self.speed)
-            self.rect = self.rect.move(0, self.speed_vector.y * self.speed)
+            self.rect = self.rect.move(0, round(self.speed_vector.y * self.speed))
 
     def take_damage(self, damage):
         self.hp -= damage
