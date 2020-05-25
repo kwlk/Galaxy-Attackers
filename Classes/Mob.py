@@ -63,7 +63,7 @@ class Mob:
 
     @classmethod
     def endless_spawn(cls, difficulty, position: Position):
-        i = randbelow(1001)
+        i = randbelow(101)
         if i < difficulty:
             return big_chungus(position)
         if i < 2 * difficulty:
@@ -92,25 +92,45 @@ class Mob:
             return ez_pz(position)
         if difficulty == 3:
             i = randbelow(101)
-            if i < 10:
-                return sneaky_peaky(position)
-            if i < 15:
-                return rapid_fire(position)
-            if i < 25:
+            if i < 20:
                 return the_wall(position)
-            if i < 50:
+            if i < 40:
                 return normie(position)
             return ez_pz(position)
         if difficulty == 4:
             i = randbelow(101)
-            if i < 10:
-                return big_chungus(position)
-            if i < 20:
+            if i < 40:
                 return sneaky_peaky(position)
-            if i < 30:
-                return rapid_fire(position)
-            if i < 35:
-                return the_wall(position)
-            if i < 70:
+            if i < 50:
                 return normie(position)
+            return ez_pz(position)
+        if difficulty == 5:
+            i = randbelow(101)
+            if i < 20:
+                return rapid_fire(position)
+            return ez_pz(position)
+        if difficulty == 6:
+            i = randbelow(101)
+            if i < 10:
+                return rapid_fire(position)
+            if i < 20:
+                return sneaky_peaky()
+            if i < 30:
+                return the_wall()
+            if i < 40:
+                return normie()
+            return ez_pz(position)
+        if difficulty == 7:
+            i = randbelow(101)
+            if i < 20:
+                return big_chungus(position)
+            if i < 40:
+                return normie()
+            return ez_pz(position)
+        if difficulty == 8:
+            i = randbelow(101)
+            if i < 50:
+                return big_chungus(position)
+            if i < 60:
+                return normie()
             return ez_pz(position)
