@@ -3,7 +3,7 @@ import pygame
 
 
 def quick(position: Position):
-    player_img = pygame.transform.scale(pygame.image.load("tank1.png"), (64, 37))
+    player_img = pygame.transform.scale(pygame.image.load("tank.png"), (64, 64))
     return Player(Position(0, 0), 3, position, player_img.get_rect(center=(position.x, position.y)), 2, player_img)
 
 
