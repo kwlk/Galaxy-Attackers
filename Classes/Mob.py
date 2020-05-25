@@ -56,10 +56,25 @@ class Mob:
         return self.hp <= 0
 
     def move(self, x_vector):
-        self.rect = self.rect.move(x_vector, 0)
+        self.rect = self.rect.move(round(x_vector), 0)
 
     def down(self, y_vector):
-        self.rect = self.rect.move(0, y_vector)
+        self.rect = self.rect.move(0, round(y_vector))
+
+    @classmethod
+    def endless_spawn(cls, difficulty, position: Position):
+        i = randbelow(1001)
+        if i < difficulty:
+            return big_chungus(position)
+        if i < 2 * difficulty:
+            return sneaky_peaky(position)
+        if i < 3 * difficulty:
+            return rapid_fire(position)
+        if i < 4 * difficulty:
+            return the_wall(position)
+        if i < 5 * difficulty:
+            return normie(position)
+        return ez_pz(position)
 
     @classmethod
     def spawn(cls, difficulty, position: Position):
@@ -67,10 +82,15 @@ class Mob:
             return ez_pz(position)
         if difficulty == 1:
             i = randbelow(101)
-            if i < 30:
+            if i < 10:
                 return normie(position)
             return ez_pz(position)
         if difficulty == 2:
+            i = randbelow(101)
+            if i < 30:
+                return normie(position)
+            return ez_pz(position)
+        if difficulty == 3:
             i = randbelow(101)
             if i < 10:
                 return sneaky_peaky(position)
@@ -81,7 +101,7 @@ class Mob:
             if i < 50:
                 return normie(position)
             return ez_pz(position)
-        if difficulty == 3:
+        if difficulty == 4:
             i = randbelow(101)
             if i < 10:
                 return big_chungus(position)

@@ -21,4 +21,4 @@ class MobBullet:
         return True
 
     def move(self):
-        self.position.y += self.speed
+        self.position.y += round(self.speed)
