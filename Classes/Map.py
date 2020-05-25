@@ -13,9 +13,8 @@ from .PowerUp import Type
 
 
 class Map:
-    def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty,
-                 pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed=1, x=400, y=400,
-                 obstacle_img="broom.png", barrier_width=10, player_width=200):
+    def __init__(self, obstacle_spawn_rate, screen, mobs_speed, mobs_acceleration, mobs_down_speed, difficulty, x, y,
+                 pu_spawn_rate, power_up_lifespan, score_size, obstacles_speed, barrier_width=10, player_width=200):
         self.x = x
         self.y = y
         self.difficulty = difficulty
@@ -27,7 +26,7 @@ class Map:
         self.player_rect = pygame.Rect(0, y - player_width, x, player_width)
         self.barrier_rect = pygame.Rect(0, y - player_width - barrier_width, x, barrier_width)
         self.mob_rect = pygame.Rect(0, score_size, x, y - barrier_width - player_width-score_size)
-        self.obstacle_img = pygame.transform.scale(pygame.image.load(obstacle_img), (32, 32))
+        self.obstacle_img = pygame.transform.scale(pygame.image.load("broom.png"), (32, 32))
         self.screen = screen
         self.player = None
         self.mobs_speed = mobs_speed
@@ -66,23 +65,14 @@ class Map:
     def set_player(self, player: Player):
         self.player = player
 
-    def generateObstacle(self):
+    def generate_obstacle(self):
         return Obstacle(Position(self.x, randbelow(self.player_rect.height) + self.player_rect.top),
                         self.obstacle_img)
-
-    def deleteObstacle(self, obstacle: Obstacle):
-        self.obstacles.remove(obstacle)
-
-    def speedUpObstacles(self, newSpeed=-1, speedDifference=0):
-        if newSpeed != -1:
-            self.obstacles_speed = newSpeed
-        else:
-            self.obstacles_speed += speedDifference
 
     def spam_obstacle(self):
         i = randbelow(1001)
         if i < self.obstacle_spawn_rate:
-            self.obstacles.append(self.generateObstacle())
+            self.obstacles.append(self.generate_obstacle())
 
     def spam_power_up(self):
         i = randbelow(1001)
@@ -145,7 +135,7 @@ class Map:
 
     def show_score(self):
         font = pygame.font.Font('freesansbold.ttf', 20)
-        score = font.render(" level: "+ str(self.difficulty), True, (255, 255, 255))
+        score = font.render(" level: " + str(self.difficulty), True, (255, 255, 255))
         score_rect = score.get_rect()
         score_rect.center = (self.x/2, self.score_size/2)
         self.screen.blit(score, score_rect)
