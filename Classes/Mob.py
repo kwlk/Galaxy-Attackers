@@ -6,32 +6,32 @@ from .MobBullet import MobBullet
 
 
 def ez_pz(position: Position):
-    img = pygame.transform.scale(pygame.image.load("broom.png"), (32, 32))
+    img = pygame.transform.scale(pygame.image.load("ufo (1).png"), (46, 32))
     return Mob(1, img, img.get_rect(center=(position.x, position.y)), 0)
 
 
 def sneaky_peaky(position: Position):
-    img = pygame.transform.scale(pygame.image.load("broom.png"), (16, 16))
+    img = pygame.transform.scale(pygame.image.load("ovni (1).png"), (23, 11))
     return Mob(1, img, img.get_rect(center=(position.x, position.y)), 0)
 
 
 def the_wall(position: Position):
-    img = pygame.transform.scale(pygame.image.load("broom.png"), (64, 64))
+    img = pygame.transform.scale(pygame.image.load("strongUfo.png"), (64, 64))
     return Mob(10, img, img.get_rect(center=(position.x, position.y)), 0)
 
 
 def rapid_fire(position: Position):
-    img = pygame.transform.scale(pygame.image.load("broom.png"), (32, 32))
+    img = pygame.transform.scale(pygame.image.load("space-ship (1).png"), (30, 32))
     return Mob(1, img, img.get_rect(center=(position.x, position.y)), 10)
 
 
 def normie(position: Position):
-    img = pygame.transform.scale(pygame.image.load("broom.png"), (32, 32))
+    img = pygame.transform.scale(pygame.image.load("green-space-ship.png"), (32, 32))
     return Mob(1, img, img.get_rect(center=(position.x, position.y)), 4)
 
 
 def big_chungus(position: Position):
-    img = pygame.transform.scale(pygame.image.load("broom.png"), (64, 64))
+    img = pygame.transform.scale(pygame.image.load("spaceship (1).png"), (64, 59))
     return Mob(5, img, img.get_rect(center=(position.x, position.y)), 2)
 
 
