@@ -11,6 +11,7 @@ class Player:
 
     def __init__(self, speed_vector: Position, max_hp, position: Position, rect, speed, img):
         self.speed_vector = speed_vector
+        self.max_hp = max_hp
         self.hp = max_hp
         self.position = position
         self.rect = rect

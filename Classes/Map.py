@@ -35,7 +35,7 @@ class Map:
         self.difficulty = difficulty
         self.is_endless = is_endless
         self.obstacles = []
-        self.obstacle_speed = starter_obstacle_speed
+        self.obstacle_speed = starter_obstacle_speed + difficulty * 0.06
         self.obstacle_spawn_rate = starter_obstacle_spawn_rate
         self.pu_spawn_rate = starter_pu_spawn_rate
         self.pu_lifespan = starter_pu_lifespan
@@ -44,11 +44,12 @@ class Map:
         self.mob_rect = pygame.Rect(0, score_size, size[0], size[1] - barrier_width - player_width-score_size)
         self.obstacle_img = pygame.transform.scale(pygame.image.load("comet1.png"), (64, 23))
         self.screen = screen
-        self.player = None
-        self.mobs_speed = starter_mobs_speed
+        self.player_model = model
+        self.player = Player.spawn(player_position, model)
+        self.mobs_speed = starter_mobs_speed + difficulty * 0.08
         self.mobs_acceleration = starter_mobs_acceleration
         self.mobs_go_right = True
-        self.mobs_down_speed = starter_mobs_down_speed
+        self.mobs_down_speed = starter_mobs_down_speed + difficulty * 0.04
         self.player_bullets = []
         self.mob_bullets = []
         self.barriers = []
@@ -58,8 +59,8 @@ class Map:
         self.mobs = []
         self.init_mobs()
 
-    def story_level_up(self):
-        self = Map(self.screen, False, self.difficulty + 1, None)
+    def ascend(self):
+        self = Map(self.screen, True, self.difficulty + 1, self.player_model)
 
     def init_barriers(self):
         for i in range(1, 8):

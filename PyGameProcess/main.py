@@ -53,6 +53,7 @@ def game_intro():
         screen.blit(text_2, text_2_rect)
         pygame.display.update()
 
+
 def menu():
     global game_on
     menu_on = True
@@ -99,6 +100,7 @@ def menu():
     if highlight[0] == 48:
         return False
     return True
+
 
 def game_outro():
     game_not_over = True
@@ -201,18 +203,34 @@ game_on = True
 game_intro()
 game_map.is_endless = menu()
 pygame.display.set_mode(size, pygame.FULLSCREEN)
-for i in range(4):
-    if game_on:
-        game_map.difficulty = i
-        success = False
-        while not success and game_on:
-            game_map = reset(game_map)
-            success = game()
-            if success is None:
-                break
-            if game_on:
-                if success:
-                    level_over("You won ")
-                else:
-                    level_over("You lost ")
+if not game_map.is_endless:
+    for i in range(9):
+        if game_on:
+            game_map.difficulty = i
+            success = False
+            while not success and game_on:
+                game_map = reset(game_map)
+                success = game()
+                if success is None:
+                    break
+                if game_on:
+                    if success:
+                        level_over("You won ")
+                    else:
+                        level_over("You lost ")
+else:
+    game_map = Map(screen=screen, is_endless=True, model=model, difficulty=0)
+    game_map.set_player(player)
+    endless_win = False
+    while not endless_win and game_on:
+        endless_win = game()
+        if endless_win is None:
+            break
+        if game_on:
+            if endless_win:
+                game_map.ascend()
+            else:
+                level_over("You lost on endless " + str(game_map.difficulty) + " ")
+
+
 game_outro()
