@@ -1,5 +1,5 @@
 import pygame
-from Classes.Position import Position
+from GameObjects.Position import Position
 from secrets import randbelow
 from enum import Enum
 
