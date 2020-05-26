@@ -221,16 +221,14 @@ if not game_map.is_endless:
 else:
     game_map = Map(screen=screen, is_endless=True, model=model, difficulty=0)
     game_map.set_player(player)
-    endless_win = False
-    while not endless_win and game_on:
+    endless_win = True
+    while endless_win and game_on:
         endless_win = game()
-        if endless_win is None:
-            break
         if game_on:
             if endless_win:
                 game_map.ascend()
             else:
-                level_over("You lost on endless " + str(game_map.difficulty) + " ")
+                level_over("You lost on endless ")
 
 
 game_outro()
