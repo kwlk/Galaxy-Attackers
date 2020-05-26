@@ -134,3 +134,14 @@ class Mob:
             if i < 60:
                 return normie(position)
             return ez_pz(position)
+        if difficulty == 9:
+            i = randbelow(101)
+            if i < 20:
+                return big_chungus(position)
+            if i < 40:
+                return the_wall(position)
+            if i < 60:
+                return rapid_fire(position)
+            if i < 80:
+                return sneaky_peaky(position)
+            return normie(position)

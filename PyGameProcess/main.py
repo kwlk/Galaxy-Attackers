@@ -12,10 +12,6 @@ game_map = Map(screen=screen, is_endless=False, model=model, difficulty=0)
 pygame.display.set_caption("Galaxy Attackers", "Galaxy Attackers")
 pygame.display.set_icon(pygame.transform.scale(pygame.image.load("ufo (1).png"), (16, 16)))
 player_position = Position(game_map.player_rect.centerx, game_map.player_rect.centery)
-"""
-player = Player(speed_vector=Position(0, 0), max_hp=10, position=player_position,
-                rect=game_map.player_img.get_rect(center=(player_position.x, player_position.y)), speed=starter_player_speed)
-"""
 player = Player.spawn(player_position, model)
 game_map.set_player(player)
 clock = pygame.time.Clock()
