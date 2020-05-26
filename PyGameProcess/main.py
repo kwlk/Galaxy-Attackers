@@ -1,8 +1,8 @@
 import pygame
 
-from Classes.Position import Position
-from Classes.Player import Player
-from Classes.Map import Map
+from GameObjects.Position import Position
+from GameObjects.Player import Player
+from GameObjects.Map import Map
 
 pygame.init()
 size = (1200, 900)
@@ -10,7 +10,7 @@ screen = pygame.display.set_mode(size)
 model = 0
 game_map = Map(screen=screen, is_endless=False, model=model, difficulty=0)
 pygame.display.set_caption("Galaxy Attackers", "Galaxy Attackers")
-pygame.display.set_icon(pygame.image.load("school.png"))
+pygame.display.set_icon(pygame.transform.scale(pygame.image.load("ufo (1).png"), (16, 16)))
 player_position = Position(game_map.player_rect.centerx, game_map.player_rect.centery)
 """
 player = Player(speed_vector=Position(0, 0), max_hp=10, position=player_position,

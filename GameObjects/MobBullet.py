@@ -1,6 +1,6 @@
 import pygame
 
-from Classes.Position import Position
+from GameObjects.Position import Position
 
 
 class MobBullet:
